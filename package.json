@@ -1,6 +1,6 @@
 {
   "name": "rx-discord-client",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "description": "",
   "repository": {
     "type": "git",
@@ -11,7 +11,7 @@
   "scripts": {
     "prepublish": "npm run build",
     "publish": "npm publish ./dist",
-    "build": "tsc"
+    "build": "tsc && cp-cli ./README.md ./dist/README.md && cp-cli ./package.json ./dist/package.json"
   },
   "author": "Mathijs Blok",
   "license": "MIT",
