@@ -1,6 +1,5 @@
 import {RawData, WebSocket} from 'ws';
 import {Observable, Subscriber} from 'rxjs';
-
 export class DiscordClient extends Observable<{ type: string, data: any }> {
 
     private ws: WebSocket | undefined;
