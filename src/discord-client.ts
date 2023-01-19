@@ -3,9 +3,9 @@ import {Observable, Subscriber} from 'rxjs';
 
 export class DiscordClient extends Observable<{ type: string, data: any }> {
 
-    private ws: WebSocket;
-    private pingInterval: NodeJS.Timer;
-    private sequence: number;
+    private ws: WebSocket | undefined;
+    private pingInterval: NodeJS.Timer | undefined;
+    private sequence: number | null = null;
 
     private constructor(
         private token: string,
@@ -13,11 +13,13 @@ export class DiscordClient extends Observable<{ type: string, data: any }> {
     ) {
         super((observer: Subscriber<{ type: string, operation: number, data: any }>) => {
             this.init(observer);
+            const pingInterval = this.pingInterval;
+            const ws = this.ws;
             return {
                 unsubscribe(): void {
-                    this.ws.close();
-                    if (this.pingInterval) {
-                        clearInterval(this.pingInterval);
+                    ws?.close();
+                    if (pingInterval) {
+                        clearInterval(pingInterval);
                     }
                 }
             };
@@ -46,12 +48,12 @@ export class DiscordClient extends Observable<{ type: string, data: any }> {
             case 10:
                 // Initial message received
                 this.pingInterval = setInterval(() => {
-                    this.ws.send(JSON.stringify({op: 1, d: this.sequence}))
+                    this.ws?.send(JSON.stringify({op: 1, d: this.sequence}))
                 }, data.heartbeat_interval);
                 break;
             case 1:
                 // Ping requested
-                this.ws.send(JSON.stringify({op: 1, d: this.sequence}));
+                this.ws?.send(JSON.stringify({op: 1, d: this.sequence}));
                 break;
             case 0:
                 observer.next({type, data});
@@ -60,7 +62,7 @@ export class DiscordClient extends Observable<{ type: string, data: any }> {
     }
 
     private initializeConnection(): void {
-        this.ws.send(JSON.stringify({
+        this.ws?.send(JSON.stringify({
             op: 2,
             d: {
                 token: this.token,
@@ -84,7 +86,7 @@ export class DiscordClient extends Observable<{ type: string, data: any }> {
 
     private handleWebsocketError(e: Error): void {
         console.log(`[${new Date().toISOString()}] `, `Connection error, closing connection [${e.toString()}]`);
-        this.ws.close();
+        this.ws?.close();
     }
 
     private init(observer: Subscriber<{ type: string, operation: number, data: any }>): void {
