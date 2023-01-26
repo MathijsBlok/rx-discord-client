@@ -19,7 +19,15 @@ DiscordClient.create("some.authorization.token")
     )
     .subscribe((msg) => console.log(JSON.stringify(msg.data)));
 ```
-You can obtain the discord authorization token by following [these instructions](https://www.youtube.com/watch?v=b9agj9jyNnI&ab_channel=Exordium)
+
+## How to obtain the authorization token
+* Login on the [discord web app](https://app.discord.com) in Google Chrome
+* Press F12 to open the developer console on the "Network" tab
+* Start typing in a server, and then wait for the request with the name "typing" in the developer console
+* Open the request and find the "authorization" header under "Request Headers"
+
+The value of that header should be used as "some.authorization.token" in this example
+
 
 Implementation example can be found on [GitLab](https://gitlab.com/MathijsBlok/discord-mirror)
 In this example all newly created messages will be saved in a mongo database.
