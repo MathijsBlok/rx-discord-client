@@ -1,6 +1,6 @@
 {
   "name": "rx-discord-client",
-  "version": "1.0.7",
+  "version": "1.0.9",
   "description": "",
   "repository": {
     "type": "git",
@@ -9,7 +9,7 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "publish": "npm run build && npm publish",
+    "prepublish": "tsc",
     "build": "tsc"
   },
   "author": "Mathijs Blok",
